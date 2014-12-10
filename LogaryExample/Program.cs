@@ -15,15 +15,14 @@ namespace LogaryExample
         {
             var logary = LogaryFactory.New("Logary Example",
                 with => with.Target<Debugger.Builder>("debugger")
-                    //.Target<Logstash.Builder>(
-                    //"ls", conf => conf.Target
-                    //   .Hostname("localhost")
-                    //   .Port(1939)
-                    //   .EventVersion(Logstash.EventVersion.One)
-                    //   .Done()
-                    //   )
-           );
-
+                    .Target<Logstash.Builder>(
+                    "ls", conf => conf.Target
+                       .Hostname("localhost")
+                       .Port(1939)
+                       .EventVersion(Logstash.EventVersion.One)
+                       .Done()
+                    )
+            );
 
             var logger = logary.GetLogger("Sample.Config");
 
