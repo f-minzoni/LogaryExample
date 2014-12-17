@@ -17,7 +17,7 @@ namespace LogaryExample
                 with => with.Target<Debugger.Builder>("debugger")
                     .Target<Logstash.Builder>(
                     "ls", conf => conf.Target
-                       .Hostname("localhost")
+                       .Hostname("127.0.0.1")
                        .Port(1939)
                        .EventVersion(Logstash.EventVersion.One)
                        .Done()
@@ -28,33 +28,17 @@ namespace LogaryExample
 
             logger.Log("Hello world", LogLevel.Debug, new
             {
-                important = "yes"
+                important = "yes",
+                start = DateTime.Now.AddDays(-2),
+                end = DateTime.Now,
+                age = new Random().Next(80)
             });
 
-            logger.Log(LogLevel.Fatal, "Fatal application error on finaliser thread");
+            logger.Log(LogLevel.Fatal, "Fatal error occurred");
 
-            logger.Verbose("immegawd immegawd immegawd!!", "tag1", "tag2");
+            logger.Verbose("Dispose the logger to flush all the logs!!", "tag1", "tag2");
 
-            var val = logger.TimePath("sample.config.compute_answer_to_everything", () =>
-            {
-                for (int i = 0; i < 100; i++)
-                    System.Threading.Thread.Sleep(1);
-
-                return 32;
-            });
-
-            logger.LogFormat(LogLevel.Warn, "{0} is the answer to the universe and everything", val);
-
-            logger.Time(() => logger.Debug("I wonder how long this takes", "introspection", "navel-gazing"));
-
-            try
-            {
-                throw new ApplicationException("thing went haywire");
-            }
-            catch (Exception e)
-            {
-                logger.DebugException("expecting haywire, so we're telling with debug", e, "haywire", "external");
-            }
+            logary.Dispose();            
         }
     }
 }
