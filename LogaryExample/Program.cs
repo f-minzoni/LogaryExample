@@ -13,6 +13,7 @@ namespace LogaryExample
     {
         static void Main(string[] args)
         {
+            //service
             var logary = LogaryFactory.New("Logary Example",
                 with => with.Target<Debugger.Builder>("debugger")
                     .Target<Logstash.Builder>(
@@ -24,8 +25,12 @@ namespace LogaryExample
                     )
             );
 
+            //path
             var logger = logary.GetLogger("Sample.Config");
 
+            logger.Log(LogLevel.Fatal, "Fatal error occurred");
+
+            //custom fields
             logger.Log("Hello world", LogLevel.Debug, new
             {
                 important = "yes",
@@ -34,11 +39,18 @@ namespace LogaryExample
                 age = new Random().Next(80)
             });
 
-            logger.Log(LogLevel.Fatal, "Fatal error occurred");
+            try
+            {
+                throw new NotImplementedException("example method not implemented");
+            }
+            catch (Exception e)
+            {
+                logger.DebugException("Exception occurred", e);
+            }
 
             logger.Verbose("Dispose the logger to flush all the logs!!", "tag1", "tag2");
 
-            logary.Dispose();            
+            logary.Dispose();
         }
     }
 }
